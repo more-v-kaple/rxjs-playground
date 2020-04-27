@@ -1,0 +1,21 @@
+.stopwatch-controls {
+    display: flex;
+    align-items: center;
+
+    .anticon {
+        padding: 0 !important;
+        width: auto !important;
+        height: 20px !important;
+        border: none;
+        background-color: transparent !important;
+
+        &-stop {
+            margin-left: 10px;
+        }
+
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+    }
+}

@@ -1,0 +1,16 @@
+.time-display {
+    display: flex;
+    flex-direction: column;
+
+    &__main {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .time {
+            margin-right: 15px;
+            font-weight: 700;
+            font-size: 35px;
+        }
+    }
+}

@@ -1,0 +1,9 @@
+.speed-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .ant-btn {
+        width: 45px;
+    }
+}

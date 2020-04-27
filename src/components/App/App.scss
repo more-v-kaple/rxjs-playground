@@ -1,0 +1,36 @@
+body {
+    margin: 0 auto;
+    width: 100vh;
+    height: 100vh;
+}
+
+body, .app {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.app {
+    border: 10px solid #ffc600;
+    border-radius: 5px;
+    font-family: monospace;
+    padding: 15px;
+    box-shadow: 0 6px 15px 0 rgba(0, 0, 0, 0.12);
+    background-color: #ffffff;
+    transition: box-shadow 0.4s ease-in-out;
+    font-size: 12px;
+    &:hover {
+        box-shadow: 0 14px 21px 0 rgba(0, 0, 0, 0.12);
+    }
+
+    .ant-btn {
+        padding: 2px 5px;
+        width: 50px;
+        height: 25px;
+        font-size: 12px;
+        text-align: center;
+        text-transform: uppercase;
+        &.active {
+            background-color: #ffc600;
+        }
+    }
+}
