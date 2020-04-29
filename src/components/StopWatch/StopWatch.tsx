@@ -1,54 +1,87 @@
 import React, { FC, useEffect, useState, useRef } from 'react';
+import { Subscription } from 'rxjs';
 
 import SpeedControls from '../SpeedControls';
 import TimeDisplay from '../TimeDisplay';
 import StopWatchControls from '../StopWatchControls';
 
-import { stopWatchService } from '../../services';
-import { convertSecondsToMinutesSeconds } from '../../utils';
+import { getStopwatch } from '../../services';
 
 import './StopWatch.scss';
 
+interface State {
+    value: number;
+    speed: number;
+    count: boolean;
+}
+
 const defaultState = {
-    minutes: 0,
-    seconds: 0,
+    value: 0,
     speed: 1000,
     count: false
 }
 
 const StopWatch: FC<{}> = () => {
     const [state, setState] = useState(defaultState);
+    const subscription = useRef(new Subscription());
+
+    function start(){
+        subscribe();
+        setState((prevState: State) => ({...prevState, count: true }));
+    }
+
+    function stop(complete = true){
+        setState((prevState: State) => (
+            {...prevState, count: false, value: complete? 0 : state.value }
+        ));
+        unsubscribe();
+    }
+
+    function subscribe() {
+        subscription.current = getStopwatch(state.speed, state.value)
+        .subscribe((value: number) => {
+            setState((prevState: State) => ({ ...prevState, value }));
+        });
+    }
+
+    function unsubscribe() {
+        subscription.current.unsubscribe();
+    }
+
+    function changeSpeed(speed: number): void {
+        setState((prevState: State) => ({...prevState, speed }));
+    }
 
     useEffect(() => {
-        const subscription = stopWatchService.subscribe(({ value, speed, count }: {value: number, speed: number, count: boolean }) => {
-            const { seconds, minutes } = convertSecondsToMinutesSeconds(value);
-
-            setState({ seconds, minutes, speed, count });
-        });
-        stopWatchService.init();
-
         return () => {
-            subscription.unsubscribe();
+            if (typeof subscription.current?.unsubscribe === 'function') {
+                subscription.current.unsubscribe();
+            }
         }
     }, []);
+
+    useEffect(() => {
+        if (state.count) {
+            unsubscribe();
+            subscribe();
+        }
+    }, [state.speed])
 
     return (
         <div className="stopwatch">
             <div className="row">
                 <TimeDisplay
-                    minutes={state.minutes}
-                    seconds={state.seconds}
+                    seconds={state.value}
                 />
                 <StopWatchControls
-                    onPause={stopWatchService.pause}
-                    onStop={stopWatchService.stop}
-                    onResume={stopWatchService.start}
+                    onStop={stop}
+                    onResume={start}
                     isStopWatchOn={state.count}
                 />
             </div>
             <div className="row">
                 <SpeedControls
-                    onChange={stopWatchService.changeSpeed}
+                    onChange={changeSpeed}
                     speed={state.speed}
                 />
             </div>

@@ -1,4 +1,3 @@
 export interface TimeDisplayProps {
-    minutes: number,
-    seconds: number,
+    seconds: number;
 }

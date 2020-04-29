@@ -1,1 +1,1 @@
-export { stopWatchService } from './stopwatch';
+export { getStopwatch } from './stopwatch';
